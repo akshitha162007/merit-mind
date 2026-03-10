@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Backend Connection Test</title>
+</head>
+<body>
+    <h1>MeritMind Backend Test</h1>
+    <button onclick="testHealth()">Test Health Endpoint</button>
+    <button onclick="testRegister()">Test Register</button>
+    <pre id="output"></pre>
+
+    <script>
+        const output = document.getElementById('output');
+
+        async function testHealth() {
+            try {
+                const response = await fetch('http://localhost:8000/api/health');
+                const data = await response.json();
+                output.textContent = 'Health Check: ' + JSON.stringify(data, null, 2);
+            } catch (error) {
+                output.textContent = 'Health Error: ' + error.message;
+            }
+        }
+
+        async function testRegister() {
+            try {
+                const response = await fetch('http://localhost:8000/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: 'Test User',
+                        email: 'test@example.com',
+                        password: 'password123',
+                        role: 'recruiter'
+                    })
+                });
+                const data = await response.json();
+                output.textContent = 'Register Response: ' + JSON.stringify(data, null, 2);
+            } catch (error) {
+                output.textContent = 'Register Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

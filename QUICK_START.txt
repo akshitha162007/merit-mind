@@ -1,0 +1,88 @@
+╔══════════════════════════════════════════════════════════════╗
+║                  MERITMIND STARTUP GUIDE                     ║
+╚══════════════════════════════════════════════════════════════╝
+
+⚠️  IMPORTANT: You must start the BACKEND first!
+
+┌──────────────────────────────────────────────────────────────┐
+│  OPTION 1: Automatic (Easiest)                               │
+└──────────────────────────────────────────────────────────────┘
+
+   Double-click:  start-all.bat
+
+   This will:
+   ✓ Initialize database
+   ✓ Start backend on port 8000
+   ✓ Start frontend on port 5173
+
+
+┌──────────────────────────────────────────────────────────────┐
+│  OPTION 2: Manual (Two Terminals)                            │
+└──────────────────────────────────────────────────────────────┘
+
+   Terminal 1 - BACKEND:
+   ─────────────────────
+   cd backend
+   python -m uvicorn main:app --reload --port 8000
+
+   Wait for: "Application startup complete"
+
+
+   Terminal 2 - FRONTEND:
+   ──────────────────────
+   cd frontend
+   npm run dev
+
+   Wait for: "Local: http://localhost:5173"
+
+
+┌──────────────────────────────────────────────────────────────┐
+│  VERIFY IT'S WORKING                                          │
+└──────────────────────────────────────────────────────────────┘
+
+   1. Backend Check:
+      Open: http://localhost:8000/api/health
+      Should show: {"status":"ok",...}
+
+   2. Frontend Check:
+      Open: http://localhost:5173
+      Should see: MeritMind landing page
+
+
+┌──────────────────────────────────────────────────────────────┐
+│  TEST REGISTRATION                                            │
+└──────────────────────────────────────────────────────────────┘
+
+   1. Click "Sign Up" button
+   2. Fill in:
+      - Name: Your Name
+      - Email: your@email.com
+      - Password: yourpassword
+      - Role: Recruiter or Candidate
+   3. Click "Sign Up"
+   4. Should see: "Welcome, Your Name 👋"
+
+
+┌──────────────────────────────────────────────────────────────┐
+│  TROUBLESHOOTING                                              │
+└──────────────────────────────────────────────────────────────┘
+
+   ❌ "Registration failed"
+      → Backend is not running
+      → Start backend first (see above)
+
+   ❌ Blank page
+      → Check browser console (F12)
+      → Restart frontend: Ctrl+C then npm run dev
+
+   ❌ Database error
+      → Run: cd backend && python init_db.py
+
+   ❌ Port already in use
+      → Kill process: netstat -ano | findstr :8000
+      → Then: taskkill /PID <number> /F
+
+
+╔══════════════════════════════════════════════════════════════╗
+║  Need help? Check START_HERE.md for detailed instructions   ║
+╚══════════════════════════════════════════════════════════════╝
