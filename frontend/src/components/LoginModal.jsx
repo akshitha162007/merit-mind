@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { loginUser } from '../api/auth';
-import { X, Loader2 } from 'lucide-react';
 
 export default function LoginModal({ isOpen, onClose, onSwitchToSignUp, onLoginSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,12 +26,12 @@ export default function LoginModal({ isOpen, onClose, onSwitchToSignUp, onLoginS
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md animate-fadeIn" onClick={onClose}>
-      <div className="glass-strong rounded-2xl p-8 max-w-md w-full mx-4 neon-border animate-scaleIn" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md" style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }} onClick={onClose}>
+      <div className="glass-card rounded-2xl p-8 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-black uppercase tracking-tight gradient-text">LOGIN</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-white transition">
-            <X size={24} />
+          <h2 className="text-3xl font-syne font-bold text-text-primary">Sign In</h2>
+          <button onClick={onClose} className="text-text-secondary hover:text-text-primary transition">
+            ✕
           </button>
         </div>
         <form onSubmit={handleSubmit}>
@@ -40,29 +40,47 @@ export default function LoginModal({ isOpen, onClose, onSwitchToSignUp, onLoginS
             placeholder="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 mb-4 glass rounded-lg border border-[#4D4DFF]/30 focus:neon-border focus:outline-none text-white placeholder-gray-500"
+            className="w-full px-4 py-3 mb-4 rounded-lg border transition-all"
+            style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'rgba(255, 255, 255, 0.1)', color: 'var(--text-primary)' }}
             required
           />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-3 mb-4 glass rounded-lg border border-[#4D4DFF]/30 focus:neon-border focus:outline-none text-white placeholder-gray-500"
-            required
-          />
+          <div className="relative mb-4">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg border transition-all pr-10"
+              style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'rgba(255, 255, 255, 0.1)', color: 'var(--text-primary)' }}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-3 text-text-secondary hover:text-text-primary"
+            >
+              {showPassword ? '✓' : '○'}
+            </button>
+          </div>
           {error && <p className="text-red-400 text-sm mb-4 font-medium">{error}</p>}
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 neon-border bg-[#4D4DFF]/20 hover:bg-[#4D4DFF]/30 text-white font-black uppercase tracking-wide rounded-lg transition disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full py-3 gradient-button rounded-lg font-semibold transition-all disabled:opacity-60 flex items-center justify-center gap-2"
           >
-            {loading ? <><Loader2 size={18} className="animate-spin" /> LOGGING IN...</> : 'LOGIN'}
+            {loading ? (
+              <>
+                <div className="spinner"></div>
+                Signing In...
+              </>
+            ) : (
+              'Sign In'
+            )}
           </button>
         </form>
-        <p className="text-center mt-6 text-gray-400 text-sm">
+        <p className="text-center mt-6 text-text-secondary text-sm">
           Don't have an account?{' '}
-          <button onClick={onSwitchToSignUp} className="text-[#4D4DFF] font-semibold hover:underline">
+          <button onClick={onSwitchToSignUp} className="font-semibold hover:text-text-primary transition" style={{ color: 'var(--accent-pink)' }}>
             Sign Up
           </button>
         </p>

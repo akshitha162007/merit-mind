@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { registerUser } from '../api/auth';
-import { X, Loader2 } from 'lucide-react';
 
 export default function SignUpModal({ isOpen, onClose, onSwitchToLogin, onSignUpSuccess }) {
   const [name, setName] = useState('');
@@ -9,6 +8,7 @@ export default function SignUpModal({ isOpen, onClose, onSwitchToLogin, onSignUp
   const [role, setRole] = useState('recruiter');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,12 +28,12 @@ export default function SignUpModal({ isOpen, onClose, onSwitchToLogin, onSignUp
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md animate-fadeIn" onClick={onClose}>
-      <div className="glass-strong rounded-2xl p-8 max-w-md w-full mx-4 neon-border animate-scaleIn" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md" style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }} onClick={onClose}>
+      <div className="glass-card rounded-2xl p-8 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-black uppercase tracking-tight gradient-text">SIGN UP</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-white transition">
-            <X size={24} />
+          <h2 className="text-3xl font-syne font-bold text-text-primary">Create Account</h2>
+          <button onClick={onClose} className="text-text-secondary hover:text-text-primary transition">
+            ✕
           </button>
         </div>
         <form onSubmit={handleSubmit}>
@@ -42,7 +42,8 @@ export default function SignUpModal({ isOpen, onClose, onSwitchToLogin, onSignUp
             placeholder="Full Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-3 mb-4 glass rounded-lg border border-[#4D4DFF]/30 focus:neon-border focus:outline-none text-white placeholder-gray-500"
+            className="w-full px-4 py-3 mb-4 rounded-lg border transition-all"
+            style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'rgba(255, 255, 255, 0.1)', color: 'var(--text-primary)' }}
             required
           />
           <input
@@ -50,43 +51,62 @@ export default function SignUpModal({ isOpen, onClose, onSwitchToLogin, onSignUp
             placeholder="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 mb-4 glass rounded-lg border border-[#4D4DFF]/30 focus:neon-border focus:outline-none text-white placeholder-gray-500"
+            className="w-full px-4 py-3 mb-4 rounded-lg border transition-all"
+            style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'rgba(255, 255, 255, 0.1)', color: 'var(--text-primary)' }}
             required
           />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-3 mb-4 glass rounded-lg border border-[#4D4DFF]/30 focus:neon-border focus:outline-none text-white placeholder-gray-500"
-            required
-            minLength="6"
-          />
+          <div className="relative mb-4">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password (min 8 characters)"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg border transition-all pr-10"
+              style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'rgba(255, 255, 255, 0.1)', color: 'var(--text-primary)' }}
+              required
+              minLength="8"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-3 text-text-secondary hover:text-text-primary"
+            >
+              {showPassword ? '✓' : '○'}
+            </button>
+          </div>
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className="w-full px-4 py-3 mb-4 glass rounded-lg border border-[#4D4DFF]/30 focus:neon-border focus:outline-none text-white bg-transparent"
+            className="w-full px-4 py-3 mb-4 rounded-lg border transition-all"
+            style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'rgba(255, 255, 255, 0.1)', color: 'var(--text-primary)' }}
           >
-            <option value="recruiter" className="bg-[#0D001A]">Recruiter</option>
-            <option value="candidate" className="bg-[#0D001A]">Candidate</option>
+            <option value="recruiter" style={{ backgroundColor: 'var(--bg-primary)' }}>Recruiter</option>
+            <option value="candidate" style={{ backgroundColor: 'var(--bg-primary)' }}>Candidate</option>
           </select>
           {error && (
-            <div className="mb-4 p-3 glass rounded-lg border border-red-500/30">
+            <div className="mb-4 p-3 rounded-lg border" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', borderColor: 'rgba(239, 68, 68, 0.3)' }}>
               <p className="text-red-400 text-sm font-medium">{error}</p>
             </div>
           )}
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 neon-border bg-[#4D4DFF]/20 hover:bg-[#4D4DFF]/30 text-white font-black uppercase tracking-wide rounded-lg transition disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full py-3 gradient-button rounded-lg font-semibold transition-all disabled:opacity-60 flex items-center justify-center gap-2"
           >
-            {loading ? <><Loader2 size={18} className="animate-spin" /> CREATING ACCOUNT...</> : 'SIGN UP'}
+            {loading ? (
+              <>
+                <div className="spinner"></div>
+                Creating Account...
+              </>
+            ) : (
+              'Create Account'
+            )}
           </button>
         </form>
-        <p className="text-center mt-6 text-gray-400 text-sm">
+        <p className="text-center mt-6 text-text-secondary text-sm">
           Already have an account?{' '}
-          <button onClick={onSwitchToLogin} className="text-[#4D4DFF] font-semibold hover:underline">
-            Login
+          <button onClick={onSwitchToLogin} className="font-semibold hover:text-text-primary transition" style={{ color: 'var(--accent-pink)' }}>
+            Sign In
           </button>
         </p>
       </div>
