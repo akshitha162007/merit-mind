@@ -10,9 +10,14 @@ from datetime import datetime, timedelta
 
 app = FastAPI(title="Merit Mind API")
 
+# cors setup - front end usually runs on 3000 but we expose the list in
+# an env var so tests or alternate ports (8000/8080) can be added without
+# editing code.
+import os
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:5173", "http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
