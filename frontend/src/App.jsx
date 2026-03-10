@@ -10,12 +10,25 @@ import { CandidateDashboard } from './pages/CandidateDashboard';
 
 function RoleRedirect() {
   const navigate = useNavigate();
+  
   useEffect(() => {
     const role = localStorage.getItem('role');
-    if (role === 'recruiter') navigate('/dashboard/recruiter', { replace: true });
-    else if (role === 'candidate') navigate('/dashboard/candidate', { replace: true });
-    else navigate('/login', { replace: true });
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      navigate('/login', { replace: true });
+      return;
+    }
+    
+    if (role === 'recruiter') {
+      navigate('/dashboard/recruiter', { replace: true });
+    } else if (role === 'candidate') {
+      navigate('/dashboard/candidate', { replace: true });
+    } else {
+      navigate('/login', { replace: true });
+    }
   }, [navigate]);
+  
   return null;
 }
 
@@ -27,8 +40,22 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard/recruiter" element={<ProtectedRoute><RecruiterDashboard /></ProtectedRoute>} />
-          <Route path="/dashboard/candidate" element={<ProtectedRoute><CandidateDashboard /></ProtectedRoute>} />
+          <Route 
+            path="/dashboard/recruiter" 
+            element={
+              <ProtectedRoute>
+                <RecruiterDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/dashboard/candidate" 
+            element={
+              <ProtectedRoute>
+                <CandidateDashboard />
+              </ProtectedRoute>
+            } 
+          />
           <Route path="/dashboard" element={<RoleRedirect />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

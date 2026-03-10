@@ -50,12 +50,13 @@ export const Register = () => {
     try {
       const data = await registerUser(formData);
       login(data);
+      
       if (data.role === 'recruiter') {
-        navigate('/dashboard/recruiter');
+        navigate('/dashboard/recruiter', { replace: true });
       } else if (data.role === 'candidate') {
-        navigate('/dashboard/candidate');
+        navigate('/dashboard/candidate', { replace: true });
       } else {
-        navigate('/dashboard');
+        navigate('/dashboard', { replace: true });
       }
     } catch (error) {
       setApiError(error.message || 'Registration failed. Please try again.');

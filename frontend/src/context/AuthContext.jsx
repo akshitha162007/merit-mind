@@ -10,13 +10,14 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     if (storedToken) {
-      setToken(storedToken);
-      setUser({
+      const userData = {
         user_id: localStorage.getItem('user_id'),
         name: localStorage.getItem('name'),
         email: localStorage.getItem('email'),
         role: localStorage.getItem('role')
-      });
+      };
+      setToken(storedToken);
+      setUser(userData);
     }
     setLoading(false);
   }, []);
@@ -27,6 +28,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('name', data.name);
     localStorage.setItem('email', data.email);
     localStorage.setItem('role', data.role);
+    
     setToken(data.token);
     setUser({
       user_id: data.user_id,
@@ -42,6 +44,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('name');
     localStorage.removeItem('email');
     localStorage.removeItem('role');
+    
     setToken(null);
     setUser(null);
   };

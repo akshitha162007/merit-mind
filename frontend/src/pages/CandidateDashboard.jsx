@@ -10,12 +10,12 @@ export const CandidateDashboard = () => {
 
   const handleLogout = async () => {
     try {
-      await logoutUser(token);
+      if (token) await logoutUser(token);
     } catch (error) {
       // continue with logout
     }
     logout();
-    navigate('/');
+    navigate('/', { replace: true });
   };
 
   const navItems = [
