@@ -1,0 +1,37 @@
+═══════════════════════════════════════════════════════════
+           EXACT COMMANDS TO RUN MERITMIND
+═══════════════════════════════════════════════════════════
+
+TERMINAL 1 - BACKEND (Run this FIRST):
+───────────────────────────────────────────────────────────
+cd c:\Users\DELL\merit-mind\backend
+python -m uvicorn main:app --reload --port 8000
+
+Wait for: "Application startup complete."
+Keep this terminal OPEN!
+───────────────────────────────────────────────────────────
+
+
+TERMINAL 2 - FRONTEND (Run this SECOND):
+───────────────────────────────────────────────────────────
+cd c:\Users\DELL\merit-mind\frontend
+npm run dev
+
+Wait for: "Local: http://localhost:5173"
+Keep this terminal OPEN!
+───────────────────────────────────────────────────────────
+
+
+OPEN BROWSER:
+───────────────────────────────────────────────────────────
+http://localhost:5173
+───────────────────────────────────────────────────────────
+
+
+VERIFY BACKEND IS RUNNING:
+───────────────────────────────────────────────────────────
+Open: http://localhost:8000/api/health
+Should show: {"status":"ok","message":"Merit Mind backend is running!"}
+───────────────────────────────────────────────────────────
+
+═══════════════════════════════════════════════════════════
