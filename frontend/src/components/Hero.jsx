@@ -9,10 +9,6 @@ export default function Hero() {
 
   return (
     <section style={{ minHeight: '100vh', paddingTop: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-      <div style={{ position: 'absolute', top: '40px', left: '40px', background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '16px', padding: '12px 20px', fontSize: '0.875rem', fontWeight: 600 }}>
-        Hack'her'thon 3.0 — SW-02
-      </div>
-
       <div className="container" style={{ textAlign: 'center' }}>
         <h1 style={{ fontSize: 'clamp(2rem, 8vw, 3.5rem)', marginBottom: '24px', lineHeight: 1.2 }}>
           Hire on <span className="gradient-text">Merit</span>. Not on Bias.
