@@ -6,6 +6,7 @@ import ResumesPanel from './ResumesPanel';
 import FairnessOptimizerPanel from './FairnessOptimizerPanel';
 import FairnessAudit from './FairnessAudit';
 import ReverseBiasSimulator from './ReverseBiasSimulator';
+import BiasDetectionPanel from './BiasDetectionPanel';
 import SkillEvaluationPage from '../pages/SkillEvaluationPage';
 import { silenceRankDummyData } from '../config/silenceRankDummyData';
 import { emotionBlindDummyData } from '../config/emotionBlindDummyData';
@@ -19,6 +20,7 @@ export default function Dashboard({ user, onLogout }) {
   const recruiterFeatures = [
     { key: 'fairness-audit', label: 'Fairness Audit' },
     { key: 'fairness-optimizer', label: 'Fairness Optimizer' },
+    { key: 'bias-detection', label: 'Bias Detection & JD Rewrite' },
     { key: 'reverse-bias-simulator', label: 'Reverse Bias Simulator' },
     { key: 'silence-rank', label: 'Silence Rank' },
     { key: 'emotion-blind', label: 'EmotionBlind' },
@@ -29,6 +31,7 @@ export default function Dashboard({ user, onLogout }) {
   const candidateFeatures = [
     { key: 'resume-upload', label: 'Resume Upload' },
     { key: 'fairness-audit', label: 'Fairness Audit' },
+    { key: 'bias-detection', label: 'Bias Detection & JD Rewrite' },
     { key: 'pipeline-status', label: 'Pipeline Status' },
     { key: 'skill-graph', label: 'Skill Graph' },
     { key: 'emotion-blind', label: 'EmotionBlind' },
@@ -71,6 +74,10 @@ export default function Dashboard({ user, onLogout }) {
 
     if (activeSection === 'fairness-audit') {
       return <FairnessAudit candidateId={user.user_id} />;
+    }
+
+    if (activeSection === 'bias-detection') {
+      return <BiasDetectionPanel />;
     }
 
     if (activeSection === 'reverse-bias-simulator' && isRecruiter) {
