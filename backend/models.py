@@ -52,6 +52,7 @@ class Resume(Base):
     candidate_id = Column(UUID(as_uuid=True), ForeignKey("candidates.id"))
     raw_text = Column(Text)
     parsed_json = Column(JSONB)   # skills, education, experience
+    blind_text = Column(Text)
     skill_graph_json = Column(JSONB)
     created_at = Column(DateTime, server_default=func.now())
 
@@ -182,3 +183,12 @@ class RecruiterOverride(Base):
     overridden_decision = Column(String(100))
     reason = Column(Text)
     created_at = Column(DateTime, server_default=func.now())
+
+class FairnessAuditLog(Base):
+    __tablename__ = "fairness_audit_logs"
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    candidate_id = Column(UUID(as_uuid=True), ForeignKey("candidates.id"))
+    original_score = Column(Float)
+    corrected_score = Column(Float)
+    bias_delta = Column(Float)
+    timestamp = Column(DateTime, server_default=func.now())

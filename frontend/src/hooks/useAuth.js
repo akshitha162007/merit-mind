@@ -36,6 +36,11 @@ export default function useAuth() {
 
   const logout = async () => {
     const token = localStorage.getItem('token');
+
+    // Always clear local session first so UI logs out immediately.
+    localStorage.clear();
+    setUser(null);
+
     if (token) {
       try {
         await logoutUser(token);
@@ -43,8 +48,6 @@ export default function useAuth() {
         console.error('Logout error:', error);
       }
     }
-    localStorage.clear();
-    setUser(null);
   };
 
   return { user, login, register, logout };
