@@ -4,12 +4,15 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel
 import bcrypt
 from database import get_db
-from models import User, Session as UserSession
+from models import User, Session as UserSession, Candidate
 import uuid
 import os
 import json
 import re
 from datetime import datetime, timedelta
+
+# Import routers
+from routers import silence_rank, emotion_blind, resume_upload, fairness, simulator, bias
 
 app = FastAPI(title="Merit Mind API")
 
@@ -20,6 +23,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include routers
+app.include_router(silence_rank.router)
+app.include_router(emotion_blind.router)
+app.include_router(resume_upload.router)
+app.include_router(fairness.router)
+app.include_router(simulator.router)
+app.include_router(bias.router)
 
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -64,7 +75,8 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
     db.add(user)
     db.flush()
     if req.role == "candidate":
-        db.add(Candidate(id=user.id, name=req.name, email=req.email))
+        candidate = Candidate(name=req.name, email=req.email)
+        db.add(candidate)
     token = str(uuid.uuid4())
     session = UserSession(
         user_id=user.id,
