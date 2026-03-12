@@ -1,4 +1,11 @@
+import { useState } from 'react';
+import { ChevronRight } from 'lucide-react';
+import FairnessOptimizerPanel from './FairnessOptimizerPanel';
+import ReverseBiasSimulator from './ReverseBiasSimulator';
+
 export default function Dashboard({ user, onLogout }) {
+  const [dashboardOpen, setDashboardOpen] = useState(true);
+  const [activePanel, setActivePanel] = useState(null);
   return (
     <div style={{ minHeight: '100vh', background: '#0D0B1E', display: 'flex' }}>
       {/* Sidebar */}
@@ -13,9 +20,71 @@ export default function Dashboard({ user, onLogout }) {
         </div>
 
         <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <button style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', borderRadius: '8px', background: 'rgba(233, 30, 140, 0.1)', color: 'white', fontWeight: 600, border: 'none', cursor: 'pointer', borderLeft: '4px solid #E91E8C', transition: 'all 0.3s ease' }}>
-            Dashboard
-          </button>
+          {/* Dashboard Parent Item */}
+          <div 
+            onClick={() => setDashboardOpen(!dashboardOpen)}
+            style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center', 
+              padding: '12px 20px', 
+              cursor: 'pointer', 
+              color: '#B8A9D9',
+              fontFamily: 'DM Sans, sans-serif',
+              fontSize: '14px',
+              fontWeight: 600,
+              borderRadius: '8px',
+              transition: 'background 0.3s ease'
+            }}
+          >
+            <span>Dashboard</span>
+            <ChevronRight 
+              size={16} 
+              style={{ 
+                transform: dashboardOpen ? 'rotate(90deg)' : 'rotate(0deg)', 
+                transition: 'transform 300ms' 
+              }} 
+            />
+          </div>
+
+          {/* Dashboard Child Items */}
+          {dashboardOpen && user.role === 'recruiter' && (
+            <>
+              <div 
+                onClick={() => setActivePanel('fairness-optimizer')}
+                style={{ 
+                  padding: '10px 20px 10px 32px', 
+                  cursor: 'pointer',
+                  fontFamily: 'DM Sans, sans-serif',
+                  fontSize: '14px',
+                  color: activePanel === 'fairness-optimizer' ? '#E91E8C' : '#B8A9D9',
+                  borderLeft: activePanel === 'fairness-optimizer' ? '4px solid #E91E8C' : 'none',
+                  background: activePanel === 'fairness-optimizer' ? 'rgba(233,30,140,0.08)' : 'transparent',
+                  borderRadius: '8px',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                Fairness Optimizer
+              </div>
+              <div 
+                onClick={() => setActivePanel('reverse-bias-simulator')}
+                style={{ 
+                  padding: '10px 20px 10px 32px', 
+                  cursor: 'pointer',
+                  fontFamily: 'DM Sans, sans-serif',
+                  fontSize: '14px',
+                  color: activePanel === 'reverse-bias-simulator' ? '#E91E8C' : '#B8A9D9',
+                  borderLeft: activePanel === 'reverse-bias-simulator' ? '4px solid #E91E8C' : 'none',
+                  background: activePanel === 'reverse-bias-simulator' ? 'rgba(233,30,140,0.08)' : 'transparent',
+                  borderRadius: '8px',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                Reverse Bias Simulator
+              </div>
+            </>
+          )}
+
           <button style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', borderRadius: '8px', color: '#B8A9D9', fontWeight: 600, border: 'none', cursor: 'pointer', background: 'transparent', transition: 'all 0.3s ease' }}>
             {user.role === 'recruiter' ? 'Job Postings' : 'Applications'}
           </button>
@@ -45,6 +114,12 @@ export default function Dashboard({ user, onLogout }) {
       {/* Main Content */}
       <main style={{ flex: 1, marginLeft: '240px', padding: '32px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          {activePanel === 'fairness-optimizer' ? (
+            <FairnessOptimizerPanel />
+          ) : activePanel === 'reverse-bias-simulator' ? (
+            <ReverseBiasSimulator />
+          ) : (
+            <>
           <div style={{ marginBottom: '32px' }}>
             <h2 style={{ fontSize: '2rem', fontWeight: 800, color: 'white', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Welcome Back, {user.name}
@@ -96,6 +171,8 @@ export default function Dashboard({ user, onLogout }) {
               {user.role === 'recruiter' ? 'Launch JD Analyzer' : 'Upload Resume'}
             </button>
           </div>
+            </>
+          )}
         </div>
       </main>
     </div>
