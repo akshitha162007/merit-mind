@@ -1,5 +1,4 @@
-import {  Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useState } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Stats from './components/Stats';
@@ -12,11 +11,11 @@ import RegisterPage from './pages/RegisterPage';
 import Dashboard from './components/Dashboard';
 import useAuth from './hooks/useAuth';
 
-function LandingPage({ openLogin, openSignUp }) {
+function LandingPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#0D0B1E' }}>
-      <Navbar openLogin={openLogin} openSignUp={openSignUp} />
-      <Hero openSignUp={openSignUp} />
+      <Navbar />
+      <Hero />
       <Stats />
       <Features />
       <HowItWorks />
@@ -28,22 +27,18 @@ function LandingPage({ openLogin, openSignUp }) {
 
 function App() {
   const { user, login, register, logout } = useAuth();
-  const [showLogin, setShowLogin] = useState(false);
-  const [showSignUp, setShowSignUp] = useState(false);
 
   if (user) {
     return <Dashboard user={user} onLogout={logout} />;
   }
 
   return (
-    // <Router>
       <Routes>
-        <Route path="/" element={<LandingPage openLogin={() => setShowLogin(true)} openSignUp={() => setShowSignUp(true)} />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage onLoginSuccess={login} />} />
         <Route path="/register" element={<RegisterPage onSignUpSuccess={register} />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    // </Router>
   );
 }
 

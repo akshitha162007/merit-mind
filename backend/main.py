@@ -4,9 +4,12 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel
 import bcrypt
 from database import get_db
-from models import User, Session as UserSession
+from models import User, Session as UserSession, Candidate
 import uuid
 from datetime import datetime, timedelta
+from routers import silence_rank as silence_rank_router
+from routers import emotion_blind as emotion_blind_router
+from routers import resume_upload as resume_upload_router
 
 app = FastAPI(title="Merit Mind API")
 
@@ -30,7 +33,7 @@ class RegisterRequest(BaseModel):
     name: str
     email: str
     password: str
-    role: str = "recruiter"  # recruiter | candidate
+    role: str = "recruiter"
 
 class LoginRequest(BaseModel):
     email: str
@@ -60,6 +63,8 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
     )
     db.add(user)
     db.flush()
+    if req.role == "candidate":
+        db.add(Candidate(id=user.id, name=req.name, email=req.email))
     token = str(uuid.uuid4())
     session = UserSession(
         user_id=user.id,
@@ -96,3 +101,7 @@ def logout(token: str, db: Session = Depends(get_db)):
 @app.get("/api/health")
 def health_check():
     return {"status": "ok", "message": "Merit Mind backend is running!"}
+
+app.include_router(silence_rank_router.router)
+app.include_router(emotion_blind_router.router)
+app.include_router(resume_upload_router.router)

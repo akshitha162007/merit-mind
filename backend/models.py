@@ -52,6 +52,7 @@ class Resume(Base):
     candidate_id = Column(UUID(as_uuid=True), ForeignKey("candidates.id"))
     raw_text = Column(Text)
     parsed_json = Column(JSONB)   # skills, education, experience
+    blind_text = Column(Text)
     skill_graph_json = Column(JSONB)
     created_at = Column(DateTime, server_default=func.now())
 
