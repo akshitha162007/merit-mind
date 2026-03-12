@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:8000/api/auth';
+// backend is served on port 8080 by default
+const API_BASE = 'http://localhost:8080/api/auth';
 
 export const registerUser = async ({ name, email, password, role }) => {
   try {

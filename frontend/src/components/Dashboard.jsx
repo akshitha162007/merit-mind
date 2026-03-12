@@ -1,4 +1,8 @@
+import { useNavigate, Outlet } from 'react-router-dom';
+
 export default function Dashboard({ user, onLogout }) {
+  const navigate = useNavigate();
+
   return (
     <div style={{ minHeight: '100vh', background: '#0D0B1E', display: 'flex' }}>
       {/* Sidebar */}
@@ -13,19 +17,46 @@ export default function Dashboard({ user, onLogout }) {
         </div>
 
         <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <button style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', borderRadius: '8px', background: 'rgba(233, 30, 140, 0.1)', color: 'white', fontWeight: 600, border: 'none', cursor: 'pointer', borderLeft: '4px solid #E91E8C', transition: 'all 0.3s ease' }}>
+          <button
+            onClick={() => navigate('.')}
+            style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', borderRadius: '8px', background: 'rgba(233, 30, 140, 0.1)', color: 'white', fontWeight: 600, border: 'none', cursor: 'pointer', borderLeft: '4px solid #E91E8C', transition: 'all 0.3s ease' }}
+          >
             Dashboard
           </button>
-          <button style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', borderRadius: '8px', color: '#B8A9D9', fontWeight: 600, border: 'none', cursor: 'pointer', background: 'transparent', transition: 'all 0.3s ease' }}>
+          <button
+            onClick={() => navigate(user.role === 'recruiter' ? '/recruitment' : '/applications')}
+            style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', borderRadius: '8px', color: '#B8A9D9', fontWeight: 600, border: 'none', cursor: 'pointer', background: 'transparent', transition: 'all 0.3s ease' }}
+          >
             {user.role === 'recruiter' ? 'Job Postings' : 'Applications'}
           </button>
-          <button style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', borderRadius: '8px', color: '#B8A9D9', fontWeight: 600, border: 'none', cursor: 'pointer', background: 'transparent', transition: 'all 0.3s ease' }}>
+          <button
+            onClick={() => navigate('candidate-view')}
+            style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', borderRadius: '8px', color: '#B8A9D9', fontWeight: 600, border: 'none', cursor: 'pointer', background: 'transparent', transition: 'all 0.3s ease' }}
+          >
             {user.role === 'recruiter' ? 'Candidates' : 'My Resume'}
           </button>
-          <button style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', borderRadius: '8px', color: '#B8A9D9', fontWeight: 600, border: 'none', cursor: 'pointer', background: 'transparent', transition: 'all 0.3s ease' }}>
+          <button
+            onClick={() => navigate('test-fairness')}
+            style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', borderRadius: '8px', color: '#B8A9D9', fontWeight: 600, border: 'none', cursor: 'pointer', background: 'transparent', transition: 'all 0.3s ease' }}
+          >
+            Fairness Test
+          </button>
+          <button
+            onClick={() => navigate('skill-evaluation')}
+            style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', borderRadius: '8px', color: '#B8A9D9', fontWeight: 600, border: 'none', cursor: 'pointer', background: 'transparent', transition: 'all 0.3s ease' }}
+          >
+            Skill Evaluation
+          </button>
+          <button
+            onClick={() => navigate('analytics')}
+            style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', borderRadius: '8px', color: '#B8A9D9', fontWeight: 600, border: 'none', cursor: 'pointer', background: 'transparent', transition: 'all 0.3s ease' }}
+          >
             Analytics
           </button>
-          <button style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', borderRadius: '8px', color: '#B8A9D9', fontWeight: 600, border: 'none', cursor: 'pointer', background: 'transparent', transition: 'all 0.3s ease' }}>
+          <button
+            onClick={() => navigate('settings')}
+            style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', borderRadius: '8px', color: '#B8A9D9', fontWeight: 600, border: 'none', cursor: 'pointer', background: 'transparent', transition: 'all 0.3s ease' }}
+          >
             Settings
           </button>
         </nav>
@@ -96,6 +127,9 @@ export default function Dashboard({ user, onLogout }) {
               {user.role === 'recruiter' ? 'Launch JD Analyzer' : 'Upload Resume'}
             </button>
           </div>
+
+          {/* Nested route content */}
+          <Outlet />
         </div>
       </main>
     </div>

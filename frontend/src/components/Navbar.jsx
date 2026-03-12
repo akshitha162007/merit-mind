@@ -19,6 +19,9 @@ export default function Navbar({ openLogin, openSignUp }) {
       </Link>
 
       <div className="flex-center" style={{ gap: '12px' }}>
+        <Link to="/candidate-view" className="btn-outline" style={{ textDecoration: 'none' }}>
+          Demo
+        </Link>
         <Link to="/login" className="btn-outline" style={{ textDecoration: 'none' }}>
           Login
         </Link>
