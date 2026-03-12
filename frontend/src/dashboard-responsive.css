@@ -1,0 +1,19 @@
+/* Mobile Responsive Styles for Dashboard */
+
+@media (max-width: 768px) {
+  /* Make sidebar horizontal on mobile */
+  .dashboard-sidebar {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    flex-direction: row !important;
+    border-right: none !important;
+    border-bottom: 1px solid #E5E7EB !important;
+  }
+  
+  /* Adjust main content for mobile */
+  .dashboard-main-content {
+    margin-left: 0 !important;
+    padding: 16px !important;
+  }
+}
