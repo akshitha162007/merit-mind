@@ -1,9 +1,4 @@
-#import spacy
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
-
-#nlp = spacy.load("en_core_web_sm")
+import re
 
 TECH_SKILLS = [
     "Python", "JavaScript", "React", "FastAPI", "SQL", "PostgreSQL", "MongoDB", "AWS", "Docker", "Git",
@@ -15,27 +10,17 @@ TECH_SKILLS = [
 ]
 
 def strip_language(text: str) -> str:
-    """Strip identity markers from resume text using SpaCy NER."""
+    """Strip common identity markers from resume text with lightweight regexes.
+
+    This keeps the agent importable even when heavy NLP models are unavailable.
+    """
     if not text:
         return ""
-    
-    doc = nlp(text)
-    replacements = {}
-    
-    for ent in doc.ents:
-        if ent.label_ == "PERSON":
-            replacements[ent.text] = "[NAME]"
-        elif ent.label_ == "ORG":
-            replacements[ent.text] = "[COMPANY]"
-        elif ent.label_ == "GPE":
-            replacements[ent.text] = "[LOCATION]"
-        elif ent.label_ == "FAC":
-            replacements[ent.text] = "[INSTITUTION]"
-    
-    cleaned_text = text
-    for original, replacement in replacements.items():
-        cleaned_text = cleaned_text.replace(original, replacement)
-    
+
+    cleaned_text = re.sub(r"\b([A-Z][a-z]+\s+[A-Z][a-z]+)\b", "[NAME]", text)
+    cleaned_text = re.sub(r"\b([\w.-]+@[\w.-]+\.[A-Za-z]{2,})\b", "[EMAIL]", cleaned_text)
+    cleaned_text = re.sub(r"\b(\+?\d[\d\s\-]{8,}\d)\b", "[PHONE]", cleaned_text)
+
     return cleaned_text
 
 def extract_skills(text: str) -> list:
@@ -53,20 +38,15 @@ def extract_skills(text: str) -> list:
     return list(set(found_skills))
 
 def compute_similarity(skills_a: list, skills_b: list) -> float:
-    """Compute cosine similarity between two skill lists using TF-IDF."""
+    """Compute lightweight overlap similarity between two skill lists."""
     if not skills_a or not skills_b:
         return 0.0
-    
-    text_a = " ".join(skills_a)
-    text_b = " ".join(skills_b)
-    
-    vectorizer = TfidfVectorizer()
-    try:
-        tfidf_matrix = vectorizer.fit_transform([text_a, text_b])
-        similarity = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0]
-        return float(similarity)
-    except:
-        return 0.0
+
+    set_a = {s.lower() for s in skills_a}
+    set_b = {s.lower() for s in skills_b}
+    intersection = len(set_a.intersection(set_b))
+    union = len(set_a.union(set_b))
+    return float(intersection / union) if union else 0.0
 
 def run_silence_rank(jd_text: str, candidates: list) -> list:
     """Run SilenceRank analysis on candidates against job description."""

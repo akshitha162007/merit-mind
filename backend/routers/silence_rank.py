@@ -31,7 +31,7 @@ def run_silence_rank_analysis(request: SilenceRankRequest, db: Session = Depends
             if not app:
                 continue
             
-            resume = db.query(Resume).filter(Resume.id == app.resume_id).first()
+            resume = db.query(Resume).filter(Resume.candidate_id == app.candidate_id).first()
             candidate = db.query(Candidate).filter(Candidate.id == app.candidate_id).first()
             
             if resume and candidate:
@@ -56,8 +56,7 @@ def run_silence_rank_analysis(request: SilenceRankRequest, db: Session = Depends
                 existing.silence_rank = result["silence_rank"]
                 existing.language_rank = result["language_rank"]
                 existing.lir_score = result["lir"]
-                existing.shift_reason = result["shift_reason"]
-                existing.skill_similarity = result["silence_score"]
+                existing.shifted_reason = result["shift_reason"]
             else:
                 new_result = SilenceRankResult(
                     id=str(uuid.uuid4()),
@@ -65,8 +64,7 @@ def run_silence_rank_analysis(request: SilenceRankRequest, db: Session = Depends
                     silence_rank=result["silence_rank"],
                     language_rank=result["language_rank"],
                     lir_score=result["lir"],
-                    shift_reason=result["shift_reason"],
-                    skill_similarity=result["silence_score"],
+                    shifted_reason=result["shift_reason"],
                     created_at=datetime.utcnow()
                 )
                 db.add(new_result)
@@ -102,7 +100,7 @@ def get_silence_rank_results(jd_id: str, db: Session = Depends(get_db)):
         for app in applications:
             sr = db.query(SilenceRankResult).filter(SilenceRankResult.application_id == app.id).first()
             candidate = db.query(Candidate).filter(Candidate.id == app.candidate_id).first()
-            resume = db.query(Resume).filter(Resume.id == app.resume_id).first()
+            resume = db.query(Resume).filter(Resume.candidate_id == app.candidate_id).first()
             
             if sr and candidate:
                 results.append({
@@ -113,8 +111,7 @@ def get_silence_rank_results(jd_id: str, db: Session = Depends(get_db)):
                     "silence_rank": sr.silence_rank,
                     "language_rank": sr.language_rank,
                     "lir_score": sr.lir_score,
-                    "shift_reason": sr.shift_reason,
-                    "skill_similarity": sr.skill_similarity,
+                    "shift_reason": sr.shifted_reason,
                     "skills": resume.skill_graph_json if resume else {}
                 })
         

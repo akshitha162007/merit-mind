@@ -1,25 +1,35 @@
 import re
 import io
+import importlib
 from PIL import Image
 
-try:
-    import fitz
-except ImportError:
-    fitz = None
+fitz = None
+fitz_spec = importlib.util.find_spec("fitz")
+if fitz_spec:
+    try:
+        fitz = importlib.import_module("fitz")
+    except Exception:
+        fitz = None
+
+pdfplumber = None
+pdfplumber_spec = importlib.util.find_spec("pdfplumber")
+if pdfplumber_spec:
+    try:
+        pdfplumber = importlib.import_module("pdfplumber")
+    except Exception:
+        pdfplumber = None
+
+pytesseract = None
+pytesseract_spec = importlib.util.find_spec("pytesseract")
+if pytesseract_spec:
+    try:
+        pytesseract = importlib.import_module("pytesseract")
+    except Exception:
+        pytesseract = None
 
 try:
-    import pdfplumber
-except ImportError:
-    pdfplumber = None
-
-try:
-    import pytesseract
-except ImportError:
-    pytesseract = None
-
-try:
-    import spacy
-    nlp = spacy.load("en_core_web_sm")
+    spacy_module = importlib.import_module("spacy")
+    nlp = spacy_module.load("en_core_web_sm")
 except Exception:
     nlp = None
 
